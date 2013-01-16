@@ -5,7 +5,7 @@ describe "ProbabilityCalculator" do
   let(:board) { Board.new(4) }
   let(:ship) { Ship.new("TestShip", 3) }
 
-  describe "#calculate_single_ship(board, ship)" do
+  describe ".calculate_single_ship(board, ship)" do
     let(:result) do
       h = Hash.new
       h[[1,1]] = 2
@@ -35,7 +35,7 @@ describe "ProbabilityCalculator" do
       subject.calculate_single_ship(board, ship).should be_instance_of(Hash)
     end
 
-    it "returns the correct calculation" do
+    it "returns the correct calculation, when no spaces are blocked" do
       result_matrix = subject.calculate_single_ship(board, ship)
 
       (1..4).each do |x|
@@ -46,7 +46,7 @@ describe "ProbabilityCalculator" do
     end
   end
 
-  describe "#calculate_all_ships(board, ships[])" do
+  describe ".calculate_all_ships(board, ships[])" do
     let(:ships) {[
       Ship.new("Destroyer", 3),
       Ship.new("Patrol", 2)
@@ -83,21 +83,36 @@ describe "ProbabilityCalculator" do
   end
 
 
-  describe "#new_probability(matrix_cell, space)" do
+  describe ".new_probability(board, matrix_cell, space)" do
     let(:space) { Space.new(1,1) }
 
-    it "only changes the probability if the space is not visited" do
+    
+    context "in hunt mode" do
+      before :each do
+        board.stub(:unsunk_ships?).and_return(false)
+      end
+
+      it "sets the cell to 1, if nil" do
+        cell = nil
+        subject.new_probability(board, cell, space).should == 1
+      end
+
+      it "adds 1 to the cell if not nil" do
+        cell = 1
+        subject.new_probability(board, cell, space).should == 2
+      end      
     end
 
-    it "sets the cell to 1, if nil" do
-      cell = nil
-      subject.new_probability(cell, space).should == 1
+    context "in target mode" do
+      before :each do
+        board.stub(:unsunk_ships?).and_return(true)
+      end
+
+      it "weights cells adjacent to a hit"
+      it "does not weight cells adjacent to a hit"
     end
 
-    it "adds 1 to the cell if not nil" do
-      cell = 1
-      subject.new_probability(cell, space).should == 2
-    end
+    
 
   end
 end

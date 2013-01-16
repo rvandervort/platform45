@@ -23,10 +23,6 @@ describe Board do
     end
   end
 
-  describe ".blocked?" do
-    it "returns true if a space is filled"
-  end
-
   describe ".each_space" do
     it "yields each space" do
       spaces = []
@@ -73,10 +69,54 @@ describe Board do
       end
   end
 
+
+  describe ".unsunk_ships?" do
+    it "returns true if there are hits" do
+      board.instance_variable_set :@hits, 1
+      board.unsunk_ships?.should be_true
+    end
+    it "returns false if there are no hits" do
+      board.instance_variable_set :@hits, 0
+      board.unsunk_ships?.should be_false   
+    end
+  end
+
+  shared_examples_for 'fitability' do
+    it "returns true if all spaces are unvisited" do
+      board.will_fit?(ship, 1,1, orientation).should be_true
+    end
+
+    it "returns true if a space is a hit, but there are un-sunk ships in play" do
+      board.stub(:unsunk_ships?).and_return(true)
+      board[test_x,test_y].stub(:state).and_return(:hit)
+      board.will_fit?(ship, 1,1, orientation).should be_true
+    end
+
+    it "returns false if a space is a hit and there are no un-sunk ships in play" do
+      board.stub(:unsunk_ships?).and_return(false)
+      board[test_x,test_y].stub(:state).and_return(:hit)
+      board.will_fit?(ship, 1,1, orientation).should be_false
+    end
+
+    it "returns false if a space is visited with a miss" do
+      board[test_x,test_y].stub(:state).and_return(:miss)
+      board.will_fit?(ship, 1,1, orientation).should be_false      
+    end  
+  end
+
   describe ".will_fit?(ship, start_x, start_y, orientation)" do
-    it "returns true if all spaces are unvisited" 
-    it "returns true if a space is a hit, but there are un-sunk ships in play"
-    it "returns false if a space is a hit and there are no un-sunk ships in play"
-    it "returns false if a space is visited with a miss"
+    let(:ship) { Ship.new("TestShip",2) }
+
+    it_behaves_like 'fitability' do
+      let(:orientation) { :horizontal }
+      let(:test_x) { 2 }
+      let(:test_y) { 1 }
+    end
+
+    it_behaves_like 'fitability' do
+      let(:orientation) { :vertical }
+      let(:test_x) { 1 }
+      let(:test_y) { 2 }
+    end
   end
 end

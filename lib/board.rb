@@ -65,6 +65,24 @@ class Board
     @size
   end
 
+  def unsunk_ships?
+    @hits > 0
+  end
+
   def will_fit?(ship, x, y, orientation = :horizontal)
+    fits = true
+
+    x_range, y_range = RangeCalculator.new.send(orientation, x, y, ship.size)
+
+    each_space x_range, y_range do |x, y, space|
+      if space.filled?
+        unless unsunk_ships?
+          fits = false
+          break
+        end
+      end
+    end
+
+    fits
   end
 end
