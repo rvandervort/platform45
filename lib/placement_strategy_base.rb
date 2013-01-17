@@ -1,5 +1,4 @@
-module PlacementStrategies
-  class Base
-  end
+class PlacementStrategyBase
 end
+
 

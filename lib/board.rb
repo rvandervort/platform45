@@ -10,12 +10,15 @@ class Board
     @board[[x,y]] = value
   end
 
-  def blocked?(x_range, y_range) 
-    blocked = false
-    each_space x_range, y_range do |x,y,space|
-      break if (blocked = space.filled?) 
-    end
-    blocked
+  def adjacent_spaces(x,y)
+    spaces = []
+
+    spaces << @board[[x - 1, y]]
+    spaces << @board[[x + 1, y]]
+    spaces << @board[[x, y - 1]]
+    spaces << @board[[x, y + 1]]
+    
+    spaces.reject { |s| s.nil? }
   end
 
   def initialize(size)

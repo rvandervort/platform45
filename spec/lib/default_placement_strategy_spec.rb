@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
 
-describe PlacementStrategies::DefaultStrategy do
+describe DefaultPlacementStrategy do
   describe "#place_ship(board, ship)" do
     it "places a single ship"
   end

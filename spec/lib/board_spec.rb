@@ -23,6 +23,54 @@ describe Board do
     end
   end
 
+  describe ".adjacent_spaces(x,y)" do
+    it "returns correct spaces for an interior space" do
+      spaces = board.adjacent_spaces(2,2)
+      spaces.count.should == 4
+
+      spaces.select { |s| s.x == 1 and s.y == 2}.count.should == 1
+      spaces.select { |s| s.x == 2 and s.y == 1}.count.should == 1
+      spaces.select { |s| s.x == 3 and s.y == 2}.count.should == 1
+      spaces.select { |s| s.x == 2 and s.y == 3}.count.should == 1
+    end
+
+    it "returns correct spaces for the upper-right corner" do
+      spaces = board.adjacent_spaces(5,1)
+      spaces.count.should == 2
+
+      spaces.select { |s| s.x == 4 and s.y == 1}.count.should == 1
+      spaces.select { |s| s.x == 5 and s.y == 2}.count.should == 1
+      spaces.select { |s| s.x == 4 and s.y == 2}.should eq([])
+    end
+
+    it "returns correct spaces for the upper-left corner" do
+      spaces = board.adjacent_spaces(1,1)
+      spaces.count.should == 2
+
+      spaces.select { |s| s.x == 1 and s.y == 2}.count.should == 1
+      spaces.select { |s| s.x == 2 and s.y == 1}.count.should == 1
+      spaces.select { |s| s.x == 2 and s.y == 2}.should eq([])
+    end
+
+    it "returns correct spaces for the lower-left corner" do
+      spaces = board.adjacent_spaces(1,5)
+      spaces.count.should == 2
+
+      spaces.select { |s| s.x == 1 and s.y == 4}.count.should == 1
+      spaces.select { |s| s.x == 2 and s.y == 5}.count.should == 1
+      spaces.select { |s| s.x == 2 and s.y == 4}.should eq([])      
+    end
+
+    it "returns correct spaces for the lower-right corner" do
+      spaces = board.adjacent_spaces(5,5)
+      spaces.count.should == 2
+
+      spaces.select { |s| s.x == 4 and s.y == 5}.count.should == 1
+      spaces.select { |s| s.x == 5 and s.y == 4}.count.should == 1
+      spaces.select { |s| s.x == 4 and s.y == 4}.should eq([])            
+    end    
+  end
+
   describe ".each_space" do
     it "yields each space" do
       spaces = []

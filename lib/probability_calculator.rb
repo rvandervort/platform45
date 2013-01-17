@@ -36,13 +36,20 @@ class ProbabilityCalculator
         end
       end
     end
-
-
+    
     matrix
   end
 
 
   def new_probability(board, matrix_cell, space)
-    (matrix_cell.nil?) ? 1 : matrix_cell + 1
+    addition = 1
+
+    if board.unsunk_ships? 
+      if board.adjacent_spaces(space.x, space.y).any? { |space| space.hit? } 
+        addition = 20
+      end
+    end
+
+    (matrix_cell.nil?) ? addition : matrix_cell + addition
   end
 end

@@ -14,4 +14,8 @@ class Space
   def filled?
     [:miss, :hit].include?(state)
   end
+
+  def hit?
+    state == :hit
+  end
 end

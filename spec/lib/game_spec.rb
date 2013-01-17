@@ -1,6 +1,6 @@
 require 'spec_helper.rb'
 
-class DummyPlacementStrategy < PlacementStrategies::Base
+class DummyPlacementStrategy < PlacementStrategyBase
   def self.place(board, ships); end;
 end
 
@@ -16,7 +16,7 @@ describe Game do
     end
 
     it "sets the default placement strategy" do
-      Game.new(board_size: 4).placement_strategy.should == PlacementStrategies::DefaultStrategy
+      Game.new(board_size: 4).placement_strategy.should == DefaultPlacementStrategy
     end
 
     it "sets the passed-in placement strategy" do

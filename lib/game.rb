@@ -4,7 +4,7 @@ class Game
    def initialize(options = {})
      @my_board = Board.new(options[:board_size])
      @opponent_board = Board.new(options[:board_size])
-     @placement_strategy = options.fetch(:placement_strategy, PlacementStrategies::DefaultStrategy)
+     @placement_strategy = options.fetch(:placement_strategy, DefaultPlacementStrategy)
      
      @my_ships = options.fetch(:ships) {[
         Ship.new("Carrier", 5),

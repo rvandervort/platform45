@@ -104,12 +104,24 @@ describe "ProbabilityCalculator" do
     end
 
     context "in target mode" do
+      let(:adjacent_spaces) { [Space.new(1,2,:hit)]}
+
       before :each do
         board.stub(:unsunk_ships?).and_return(true)
+        board.stub(:adjacent_spaces).and_return(adjacent_spaces)
       end
 
-      it "weights cells adjacent to a hit"
-      it "does not weight cells adjacent to a hit"
+      it "weights cells adjacent to a hit" do
+        cell = 0
+        subject.new_probability(board, cell, space).should == 20
+      end
+
+      it "does not weight cells not adjacent to a hit" do
+        cell = 0
+        adjacent_spaces.first.state = :miss
+        
+        subject.new_probability(board, cell, space).should == 1
+      end
     end
 
     
