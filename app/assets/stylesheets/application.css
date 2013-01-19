@@ -11,3 +11,11 @@
  *= require_self
  *= require_tree .
  */
+
+.navbar.navbar-static-top {
+  margin-bottom: 20px;
+}
+
+footer {
+  margin-top: 20px;
+}
