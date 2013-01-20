@@ -3,7 +3,7 @@ require 'spec_helper.rb'
 
 describe Platform45::APIResponse do
   let(:request) { Platform45::APIRequest.new }
-  let(:api_response) { stub "APIResponse", code: "200", body: "" }
+  let(:api_response) { stub "APIResponse", code: "200", body: "{}" }
   let(:exception) { stub("HTTPException") }
 
   describe ".initialize(request, api_response, exception = nil)" do

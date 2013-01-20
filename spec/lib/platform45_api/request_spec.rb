@@ -26,8 +26,6 @@ describe "Platform45::APIRequest" do
 
         response = request.make_request(uri, {})
 
-        puts response.inspect
-
         response.should be_instance_of(Platform45::APIResponse)
         response.success?.should be_true
       end

@@ -1,0 +1,7 @@
+= form_for @game do |f|
+  = f.label :name, 'Name'
+  = f.text_field :name
+  = f.label :email, 'Email'
+  = f.text_field :email
+  %br
+  = f.submit class: ["btn", "btn-primary"]
