@@ -124,6 +124,30 @@ describe "ProbabilityCalculator" do
       end
     end
 
+    describe ".next_guess(board, ships)" do
+      let(:probabilities) do
+        h = Hash.new
+        h[[1,1]] = 12
+        h[[1,2]] = 3
+        h[[2,1]] = 50
+        h[[2,2]] = 7
+        h
+      end
+      let(:ships) { [ship] }
+
+      before :each do
+        subject.stub(:calculate_all_ships).and_return(probabilities)
+      end
+
+      it "calculates the probability" do
+        subject.should_receive(:calculate_all_ships).with(board, ships)
+        subject.next_guess board, ships
+      end
+
+      it "returns the max of the calculated probabilities" do
+        subject.next_guess(board, ships).should == [2, 1]
+      end
+    end
     
 
   end

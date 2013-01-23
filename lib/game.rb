@@ -3,7 +3,6 @@ class Game
 
    def initialize(options = {})
      @my_board = Board.new(options[:board_size])
-     @opponent_board = Board.new(options[:board_size])
      @placement_strategy = options.fetch(:placement_strategy, DefaultPlacementStrategy)
      
      @my_ships = options.fetch(:ships) {[
@@ -15,10 +14,6 @@ class Game
         Ship.new("Patrol Boat", 1),
         Ship.new("Patrol Boat", 1)
      ]}
-
-     @opponent_ships = @my_ships.map(&:dup)
-
-     place_my_ships 
    end
 
    def place_my_ships

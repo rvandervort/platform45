@@ -1,0 +1,14 @@
+%h2 
+  Their Game Id :
+  = @game.game_id
+
+.row
+  .span6.board
+    %h4 Their Board
+  .span6.board
+    %h4 My Board
+
+.row
+  .span6
+  .span6
+    = link_to "Fire Salvo!", platform45_game_platform45_salvos_url(@game), remote: true, method: :post, class: ["btn", "btn-primary", "btn-large"]

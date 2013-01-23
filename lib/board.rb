@@ -1,5 +1,6 @@
 class Board
-  attr_reader :size, :hits
+  attr_reader :size
+  attr_accessor :hits
 
   def [](x,y)
     @board[[x,y]]

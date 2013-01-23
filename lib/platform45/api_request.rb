@@ -4,7 +4,8 @@ require 'uri'
 module Platform45
   class << self
     def base_uri
-      "http://battle.platform45.com"
+#      "http://battle.platform45.com"
+      "http://sodijsdf.com"
     end
   end
 

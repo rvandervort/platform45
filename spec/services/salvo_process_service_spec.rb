@@ -9,7 +9,7 @@ describe SalvoProcessService do
 
   describe ".mine" do
     context "on hit" do
-      it "creates and saves a new Platform45Salvo with state = miss"
+      it "creates and saves a new Platform45Salvo with state = hit"
       it "increments the games open_hit_counter"
     end
 

@@ -3,6 +3,7 @@ class SalvoProcessService < ServiceBase
   end
 
   def mine(game, x, y)
+    
   end
 
   def process(game, salvo_owner = :mine, x, y)

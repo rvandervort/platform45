@@ -11,12 +11,35 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130119201108) do
+ActiveRecord::Schema.define(:version => 20130122194818) do
 
   create_table "platform45_games", :force => true do |t|
     t.string   "game_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.integer  "open_hit_counter", :default => 0
+  end
+
+  create_table "platform45_salvos", :force => true do |t|
+    t.integer  "platform45_game_id"
+    t.string   "owner"
+    t.integer  "x"
+    t.integer  "y"
+    t.string   "state"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+  end
+
+  create_table "platform45_ships", :force => true do |t|
+    t.integer  "platform45_game_id"
+    t.string   "owner"
+    t.integer  "x"
+    t.integer  "y"
+    t.string   "orientation"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
+    t.string   "name"
+    t.string   "state",              :default => "active"
   end
 
 end

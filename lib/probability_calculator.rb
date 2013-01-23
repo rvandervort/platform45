@@ -52,4 +52,8 @@ class ProbabilityCalculator
 
     (matrix_cell.nil?) ? addition : matrix_cell + addition
   end
+
+  def next_guess(board, unsunk_ships)
+    calculate_all_ships(board, unsunk_ships).max_by {|k, v| v }.first
+  end
 end

@@ -9,20 +9,23 @@ describe CreateGameService do
     let(:request) { stub("Platform45::APIRequest") }
     let(:api_response) { stub("api_response", code: "200", body: '{"id": "1234", "x": "2", "y": "5"}') }
     let(:response) { Platform45::APIResponse.new(request, api_response, nil) }
-    let(:game) { stub "Platform45Game" }
+    let(:game) { stub "Platform45Game", game_id: "1234", id: 12 }
+    let(:ship_placements){(1..7).map { |i|  {x: i, y: i, name: "Ship#{i}", orientation: :horizontal}}}
 
     before :each do
       Platform45Game.stub(:new).and_return(game)
-        
+      Platform45Ship.any_instance.stub(:save)
+
       game.stub(:save)
       game.stub(:game_id=)
-
+      game.stub_chain(:ships, :mine, :at).and_return([])
+      EnemySalvoProcessService.stub(:process)      
       Platform45::APIRequest.stub(:new).and_return(request)
       request.stub(:register).and_return(response)
       response.stub(:game_id).and_return("1234")
     end
 
-    it "generates a new game and places my ships" do
+    it "generates a new Platform45Game for persistence" do
       Platform45Game.should_receive(:new)
       service.process name, email
     end
@@ -43,8 +46,23 @@ describe CreateGameService do
         service.process name, email
       end
 
+      it "creates a new internal game" do
+        service.process name, email
+      end
+
+      it "places the ships" do
+        Game.any_instance.stub(:place_my_ships).and_return(ship_placements)
+        Game.any_instance.should_receive(:place_my_ships)
+        service.process name, email
+      end
+
+      it "saves the placed ships" do
+        Platform45Ship.should_receive(:create).exactly(ship_placements.count).times
+        service.process name, email
+      end
+
       it "processes the first fired salvo" do
-        SalvoProcessService.any_instance.should_receive(:process).with(game, :theirs, 2, 5)
+        EnemySalvoProcessService.any_instance.should_receive(:process).with(game, 2, 5)
         service.process name, email
       end
 

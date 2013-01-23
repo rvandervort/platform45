@@ -1,0 +1,2 @@
+module Platform45SalvosHelper
+end

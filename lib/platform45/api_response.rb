@@ -47,6 +47,10 @@ module Platform45
       @success
     end
     
+    def status
+      @response_vars && @response_vars[:status]
+    end
+
     def sunk?
       !sunk.nil?
     end
