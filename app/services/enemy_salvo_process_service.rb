@@ -10,6 +10,11 @@ class EnemySalvoProcessService
     end
 
     Platform45Salvo.create({platform45_game_id: game.id, owner: "them", x: x, y: y, state: state })
+    
+    if state == "hit"
+      game.open_hit_counter += 1
+      game.save
+    end
 
     {x: x, y: y, state: state}    
   end

@@ -28,7 +28,7 @@
           %a.brand(href="#") Roger's Platform45 Developer Challenge Submission
     .container
       .row
-        .span12
+        .span12.content
           = bootstrap_flash
           = yield
     
@@ -39,3 +39,5 @@
       \==================================================
     / Placed at the end of the document so the pages load faster
     = javascript_include_tag "application"
+    = yield :javascripts
+

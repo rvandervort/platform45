@@ -1,3 +1,6 @@
+:coffeescript
+  window.game = #{render(file: 'platform45_games/show', object: @game, formats: :json)}
+
 %h2 
   Their Game Id :
   = @game.game_id
@@ -5,10 +8,32 @@
 .row
   .span6.board
     %h4 Their Board
+    %canvas{:id => "their_board", width: "500", height: "500"}
   .span6.board
     %h4 My Board
+    %canvas{:id => "my_board", width: "500", height: "500"}
 
 .row
   .span6
   .span6
-    = link_to "Fire Salvo!", platform45_game_platform45_salvos_url(@game), remote: true, method: :post, class: ["btn", "btn-primary", "btn-large"]
+    = link_to "Fire Salvo!", platform45_game_platform45_salvos_url(@game), id: "fire-salvo-btn", remote: true, method: :post, class: ["btn", "btn-primary", "btn-large"]
+
+- content_for :javascripts do
+  :coffeescript
+    window.my_board_obj = new Board
+    window.their_board_obj = new Board
+
+    window.my_board_obj.initialize "my_board", game.my_ships, game.their_salvos
+    window.their_board_obj.initialize "their_board", game.their_ships, game.my_salvos
+
+    window.game_obj = new Game
+
+    $(document).ready ()->
+      $("#fire-salvo-btn").on("ajax:success", (evt, data, status, xhr) ->
+        game_obj[data.status](data)
+      )
+
+      $("#fire-salvo-btn").on("ajax:error", (evt, data, status, xhr) ->
+
+      )
+      

@@ -13,10 +13,15 @@ class CreateGameService < ServiceBase
       game.save
 
       # Generate and place ships
-
       g = Game.new({board_size: 10})
       g.place_my_ships.each do |placement|
-        Platform45Ship.create({platform45_game_id: game.game_id, name: placement["name"], owner: "me", x: placement[:x], y: placement[:y], orientation: placement[:orientation]})
+        s = Platform45Ship.create({platform45_game_id: game.game_id, name: placement["name"], owner: "me", x: placement[:x], y: placement[:y], orientation: placement[:orientation]})
+
+        # But also place their ship too
+        s2 = s.dup
+        s2.id = nil
+        s2.owner = "them"
+        s2.save
       end
       
       salvo_service = EnemySalvoProcessService.new

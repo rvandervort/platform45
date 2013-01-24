@@ -11,6 +11,7 @@ describe CreateGameService do
     let(:response) { Platform45::APIResponse.new(request, api_response, nil) }
     let(:game) { stub "Platform45Game", game_id: "1234", id: 12 }
     let(:ship_placements){(1..7).map { |i|  {x: i, y: i, name: "Ship#{i}", orientation: :horizontal}}}
+    let(:dummy_ship) { Platform45Ship.new }
 
     before :each do
       Platform45Game.stub(:new).and_return(game)
@@ -21,6 +22,7 @@ describe CreateGameService do
       game.stub_chain(:ships, :mine, :at).and_return([])
       EnemySalvoProcessService.stub(:process)      
       Platform45::APIRequest.stub(:new).and_return(request)
+      Platform45Ship.stub(:create).and_return(dummy_ship)
       request.stub(:register).and_return(response)
       response.stub(:game_id).and_return("1234")
     end

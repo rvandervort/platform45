@@ -2,7 +2,7 @@ require 'spec_helper.rb'
 
 describe FireSalvoService do
   let(:service) { FireSalvoService.new }
-  let(:platform45_game) { Platform45Game.new({game_id: "3214"}) }
+  let(:platform45_game) { Platform45Game.new({game_id: "3214", open_hit_counter: 20}) }
 
   before :each do
     platform45_game.stub(:id).and_return(12)
@@ -84,7 +84,7 @@ describe FireSalvoService do
     context "on normal status" do
       let(:normal_response) { stub("NormalResponse", success?: true, won?: false, status: "miss", coordinates: [9,9], sunk: "Destroyer", sunk?: true)}
       let(:their_salvo) {{x: 9, y: 9, state: "miss"}}
-      let(:active_ship) { Platform45Ship.new }
+      let(:active_ship) { Platform45Ship.new({name: "Destroyer"}) }
 
       before :each do
         Platform45::APIRequest.any_instance.stub(:nuke).and_return(normal_response)
@@ -134,6 +134,11 @@ describe FireSalvoService do
 
       it "returns the name of a ship, if I sunk one" do
         service.process(12)[:sunk].should == "Destroyer"
+      end
+
+      it "reduces the game's open_hit_counter if a ship is sunk" do
+        platform45_game.should_receive(:open_hit_counter=).with(17)  # open hits (20) - Destroyer length (3)
+        service.process(12)
       end
 
       it "creates a new Platform45Salvo record with state, owned by me" do

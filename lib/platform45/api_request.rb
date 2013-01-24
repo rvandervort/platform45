@@ -16,6 +16,7 @@ module Platform45
     
     def make_request(uri, params)
       http = Net::HTTP.new(uri.host, 80)
+      http.set_debug_output($stdout)
 
       begin
         response = http.post(uri.path, params) 

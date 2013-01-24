@@ -47,6 +47,10 @@ class FireSalvoService
 
     if api_response.sunk?
       if (ship = platform45_game.ships.theirs.active.where(:name => api_response.sunk).first)
+        platform45_game.open_hit_counter -= ship.size
+        platform45_game.save
+      
+
         ship.state = "sunk"
         ship.save  
       end

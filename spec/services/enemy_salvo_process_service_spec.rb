@@ -2,7 +2,7 @@ require 'spec_helper.rb'
 
 describe EnemySalvoProcessService do
   let(:service) { EnemySalvoProcessService.new }
-  let(:game) { Platform45Game.new({game_id: "1234"})}
+  let(:game) { Platform45Game.new({game_id: "1234", open_hit_counter: 2})}
   let(:x) { 2 }
   let(:y) { 2 }
   let(:state) { "hit" }
@@ -28,7 +28,8 @@ describe EnemySalvoProcessService do
     end
 
     it "updates the game's open_hit_counter if it was a hit" do
-      pending
+      game.should_receive(:open_hit_counter=).with(3)
+      response
     end
 
     it "returns a hash with the coordinates and state" do
