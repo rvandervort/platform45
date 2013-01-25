@@ -16,7 +16,7 @@ describe "Platform45::APIRequest" do
     let(:uri) { URI.parse("http://localhost/fake_request") }
 
     it "POSTS the data to the specified URI" do
-      Net::HTTP.any_instance.should_receive(:post).with(uri.path, {})
+      Net::HTTP.any_instance.should_receive(:post).with(uri.path, "{}")
       response = request.make_request(uri, {})
     end
 

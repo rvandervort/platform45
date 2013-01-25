@@ -22,7 +22,6 @@ describe CreateGameService do
       game.stub_chain(:ships, :mine, :at).and_return([])
       EnemySalvoProcessService.stub(:process)      
       Platform45::APIRequest.stub(:new).and_return(request)
-      Platform45Ship.stub(:create).and_return(dummy_ship)
       request.stub(:register).and_return(response)
       response.stub(:game_id).and_return("1234")
     end
@@ -58,13 +57,8 @@ describe CreateGameService do
         service.process name, email
       end
 
-      it "saves the placed ships" do
-        Platform45Ship.should_receive(:create).exactly(ship_placements.count).times
-        service.process name, email
-      end
-
       it "processes the first fired salvo" do
-        EnemySalvoProcessService.any_instance.should_receive(:process).with(game, 2, 5)
+        EnemySalvoProcessService.any_instance.should_receive(:process).with(game, 2, 5, nil)
         service.process name, email
       end
 

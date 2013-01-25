@@ -5,7 +5,7 @@ describe Platform45SalvosController do
     let(:game) { Platform45Game.new }
 
     before :each do
-      FireSalvoService.any_instance.stub(:process).and_return({})
+      FireSalvoService.any_instance.stub(:process).and_return({"test" => "value"})
       game.stub(:id).and_return(12)
     end
 
@@ -16,7 +16,7 @@ describe Platform45SalvosController do
 
     it "renders the result of FireSalvoService as JSON" do
       post :create, { format: 'json', platform45_game_id: game.id }
-      response.should render_template("create")
+      response.body == {"test" => "value"}.to_json
     end
   end
 end

@@ -1,7 +1,7 @@
 class Platform45GamesController < ApplicationController
   
   def create
-    @game = CreateGameService.new.process(params[:platform45_game][:name], params[:platform45_game][:email])
+    @game = CreateGameService.new.process(params[:platform45_game][:name], params[:platform45_game][:email], Rails.logger)
 
     if @game.errors.any?
       flash[:error] = @game.errors.first

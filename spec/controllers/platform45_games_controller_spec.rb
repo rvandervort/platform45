@@ -12,7 +12,7 @@ describe Platform45GamesController do
     end
 
     it "uses the CreateGameService to create a new game" do
-      CreateGameService.any_instance.should_receive(:process).with(name,email)
+      CreateGameService.any_instance.should_receive(:process).with(name,email, anything)
       post :create, {platform45_game: {name: name, email: email }}
     end
 

@@ -4,8 +4,8 @@ require 'uri'
 module Platform45
   class << self
     def base_uri
-#      "http://battle.platform45.com"
-      "http://sodijsdf.com"
+      # "http://battle.platform45.com"
+      "http://localhost"
     end
   end
 
@@ -15,11 +15,13 @@ module Platform45
     end
     
     def make_request(uri, params)
-      http = Net::HTTP.new(uri.host, 80)
+      #http = Net::HTTP.new(uri.host, 80)
+      http = Net::HTTP.new(uri.host, 3200)
+
       http.set_debug_output($stdout)
 
       begin
-        response = http.post(uri.path, params) 
+        response = http.post(uri.path, JSON.unparse(params))
         Platform45::APIResponse.new self, response
       rescue Exception => e
         Platform45::APIResponse.new self, nil, e
