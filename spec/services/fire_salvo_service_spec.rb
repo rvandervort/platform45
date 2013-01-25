@@ -128,8 +128,8 @@ describe FireSalvoService do
       it "returns the message with mine and theirs coordinates" do
         response = service.process(12)
 
-        response[:msg].should =~ /\[3, 8\]/
-        response[:msg].should =~ /\[9, 9\]/
+        response[:msg].should =~ (/\[3, 8\]/)
+        response[:msg].should =~ (/\[9, 9\]/)
       end
 
       it "returns the name of a ship, if I sunk one" do

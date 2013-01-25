@@ -1,10 +1,31 @@
 class CreateGameService < ServiceBase
+  def create_ship_record(game_id, placement)
+
+    s = Platform45Ship.new({platform45_game_id: game_id, name: placement[:name], owner: "me", x: placement[:x], y: placement[:y], orientation: placement[:orientation]})   
+    s.save
+
+    duplicate_ship s
+  end
+
+
+  def duplicate_ship(ship, owner = "them")
+    s2 = ship.dup
+    s2.id = nil
+    s2.owner = owner
+    s2.save    
+  end
 
   def failed_response(game, api_response)
     ServiceResponse.new(api_response.error)
   end
 
   def intialize
+  end
+
+  def place_ships(game_id)
+    g = Game.new({board_size: 10})
+
+    g.place_my_ships.each { |placement| create_ship_record game_id, placement }
   end
 
   def process(name, email, logger = nil)
@@ -23,22 +44,11 @@ class CreateGameService < ServiceBase
     game.game_id = api_response.game_id
     game.save
 
-    # Generate and place ships
-    g = Game.new({board_size: 10})
-    g.place_my_ships.each do |placement|
+    place_ships game.id
 
-      s = Platform45Ship.new({platform45_game_id: game.id, name: placement[:name], owner: "me", x: placement[:x], y: placement[:y], orientation: placement[:orientation]})   
-      s.save
+    x, y = *api_response.coordinates
 
-      # But also place their ship too
-      s2 = s.dup
-      s2.id = nil
-      s2.owner = "them"
-      s2.save
-    end
-    
-    salvo_service = EnemySalvoProcessService.new
-    salvo_service.process(game, api_response.coordinates[0].to_i, api_response.coordinates[1].to_i)
+    EnemySalvoProcessService.new.process game, x.to_i, y.to_i
 
     game
   end
