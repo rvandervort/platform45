@@ -3,23 +3,11 @@ class FireSalvoService
 
     platform45_game = Platform45Game.find(platform45_game_id)
 
-    board = Board.new(10)
+    board = prepare_board(platform45_game)
 
-    platform45_game.salvos.mine.each do |salvo|
-      board.mark_space salvo.x, salvo.y, salvo.state.to_sym
-    end
-
-    # Subtract out open hits
-    platform45_game.ships.theirs.each do |ship|
-      board.hits -= ship.size if ship.sunk?
-    end
-
-    unsunk_ships = platform45_game.ships.theirs.reject(&:sunk?).map(&:to_internal_ship)
-
-    guess = ProbabilityCalculator.new.next_guess(board, unsunk_ships)
+    guess = ProbabilityCalculator.new.next_guess(board, unsunk_ships(platform45_game))
 
     api_response = Platform45::APIRequest.new.nuke(platform45_game.game_id, guess[0], guess[1])
-
 
     if api_response.success?
       if api_response.won?
@@ -47,16 +35,35 @@ class FireSalvoService
 
     if api_response.sunk?
       if (ship = platform45_game.ships.theirs.active.where(:name => api_response.sunk).first)
-        platform45_game.open_hit_counter -= ship.size
+        platform45_game.open_hit_counter -= (ship.size - 1)
         platform45_game.save
       
-
         ship.state = "sunk"
         ship.save  
       end
+    elsif api_response.hit?
+        platform45_game.open_hit_counter += 1
+        platform45_game.save      
     end
 
 
     retval
+  end
+
+  def prepare_board(platform45_game)
+    board = Board.new(10)
+
+    platform45_game.salvos.mine.each do |salvo|
+      board.mark_space salvo.x, salvo.y, salvo.state.to_sym
+    end
+
+    # Subtract out open hits
+    platform45_game.ships.theirs.each do |ship|
+      board.hits -= ship.size if ship.sunk?
+    end    
+  end
+
+  def unsunk_ships(platform45_game)
+    platform45_game.ships.theirs.reject(&:sunk?).map(&:to_internal_ship)
   end
 end

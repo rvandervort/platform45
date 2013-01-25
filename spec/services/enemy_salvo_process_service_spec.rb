@@ -27,11 +27,6 @@ describe EnemySalvoProcessService do
       response
     end
 
-    it "updates the game's open_hit_counter if it was a hit" do
-      game.should_receive(:open_hit_counter=).with(3)
-      response
-    end
-
     it "returns a hash with the coordinates and state" do
       response.should be_instance_of(Hash)
       response[:x].should == x

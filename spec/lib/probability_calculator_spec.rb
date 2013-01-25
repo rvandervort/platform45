@@ -82,6 +82,10 @@ describe "ProbabilityCalculator" do
     end
   end
 
+  describe ".initialize_matrix" do
+    let(:board) { board }
+  end
+
 
   describe ".new_probability(board, matrix_cell, space)" do
     let(:space) { Space.new(1,1) }
@@ -92,12 +96,7 @@ describe "ProbabilityCalculator" do
         board.stub(:unsunk_ships?).and_return(false)
       end
 
-      it "sets the cell to 1, if nil" do
-        cell = nil
-        subject.new_probability(board, cell, space).should == 1
-      end
-
-      it "adds 1 to the cell if not nil" do
+      it "adds 1 to the cell" do
         cell = 1
         subject.new_probability(board, cell, space).should == 2
       end      

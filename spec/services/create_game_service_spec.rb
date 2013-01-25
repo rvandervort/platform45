@@ -58,7 +58,7 @@ describe CreateGameService do
       end
 
       it "processes the first fired salvo" do
-        EnemySalvoProcessService.any_instance.should_receive(:process).with(game, 2, 5, nil)
+        EnemySalvoProcessService.any_instance.should_receive(:process).with(game, 2, 5)
         service.process name, email
       end
 

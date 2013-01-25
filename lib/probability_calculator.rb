@@ -7,7 +7,7 @@ class ProbabilityCalculator
 
     (1..board.size).each do |x|
       (1..board.size).each do |y|
-        result_matrix[[x,y]] = probabilities.inject(0) { |v,m| v = v + m[[x,y]] }
+        result_matrix[[x,y]] = probabilities.inject(0) { |v,m| v = v + m[[x,y]]  }
       end
     end
     result_matrix
@@ -15,8 +15,8 @@ class ProbabilityCalculator
 
   
   def calculate_single_ship(board, ship)
-     matrix = Hash.new
-  
+    matrix = initial_matrix(board)
+
     probability = Proc.new { |x,y,space|  matrix[[x,y]] = new_probability(board, matrix[[x,y]], space) }
 
     # Horizontal
@@ -40,17 +40,31 @@ class ProbabilityCalculator
     matrix
   end
 
+  def initial_matrix(board)
+    matrix = Hash.new
 
-  def new_probability(board, matrix_cell, space)
-    addition = 1
-
-    if board.unsunk_ships? 
-      if board.adjacent_spaces(space.x, space.y).any? { |space| space.hit? } 
-        addition = 20
+    (1..board.size).each do |x|
+      (1..board.size).each do |y|
+        matrix[[x, y]] = 0 
       end
     end
 
-    (matrix_cell.nil?) ? addition : matrix_cell + addition
+    matrix
+  end
+
+  def new_probability(board, matrix_cell, space)
+    if space.filled?
+      addition = 0
+    else
+      addition = 1
+      if board.unsunk_ships? 
+        if board.adjacent_spaces(space.x, space.y).any? { |space| space.hit? } 
+          addition = 20
+        end
+      end
+    end
+
+    matrix_cell + addition
   end
 
   def next_guess(board, unsunk_ships)

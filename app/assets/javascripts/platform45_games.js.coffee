@@ -94,7 +94,7 @@ class window.Game
   error: (data) ->
     this.alert "Error!", data.msg, "error"
 
-  success: (data) ->
+  ok: (data) ->
     this[data.game_status](data)
 
   iwon: (data) ->

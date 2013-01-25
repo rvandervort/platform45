@@ -64,5 +64,5 @@ group :development, :test do
   gem "rspec-rails"
   gem "guard"
   gem "guard-rspec"
-  gem "rb-inotify"
+  gem "rb-inotify", '~> 0.8.8'
 end
