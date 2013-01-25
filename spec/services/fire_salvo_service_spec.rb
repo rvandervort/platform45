@@ -9,6 +9,12 @@ describe FireSalvoService do
     Platform45Game.stub(:find).and_return(platform45_game)
   end
 
+  describe ".prepare_board(game)" do
+    it "returns a instance of Board" do
+      service.prepare_board(platform45_game).should be_instance_of(Board)
+    end
+  end
+
   describe ".process(platform45_game_id, x, y)" do
     let(:my_salvos) do
       (1..4).map { |i| Platform45Salvo.new({x: i, y: i, state: "hit" }) } 

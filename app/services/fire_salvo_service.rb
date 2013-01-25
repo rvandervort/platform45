@@ -14,9 +14,12 @@ class FireSalvoService
     platform45_game = Platform45Game.find(platform45_game_id)
 
     board = prepare_board(platform45_game)
+    
+    #puts "process|board = #{board.inspect}"
 
     x, y = *ProbabilityCalculator.new.next_guess(board, unsunk_ships(platform45_game)) unless (x && y)
 
+    #puts "process|guess x,y = #{x}, #{y}"
     api_response = Platform45::APIRequest.new.nuke(platform45_game.game_id, x, y)
 
 
@@ -68,6 +71,8 @@ class FireSalvoService
     platform45_game.ships.theirs.each do |ship|
       board.hits -= ship.size if ship.sunk?
     end    
+
+    board
   end
 
   def sunk_a_ship(platform45_game, api_response)

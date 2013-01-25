@@ -10,20 +10,21 @@ module Platform45
     end
     
     def game_id
-      @response_vars && @response_vars[:id]
+      @response_vars[:id]
     end
 
     def error
-      @response_vars && @response_vars[:error]
+      @response_vars[:error]
     end
 
     def hit?
-      @response_vars && @response_vars[:status] == "hit"
+      @response_vars[:status] == "hit"
     end
 
 
     def initialize(request, api_response, exception = nil)
       @success = (exception.nil? && (api_response && api_response.code == "200"))
+      @response_vars = {}
 
       if api_response && api_response.body
         @response_vars = JSON.parse(api_response.body, symbolize_names: true)
@@ -33,14 +34,20 @@ module Platform45
         @response_vars ||= {}
         @response_vars[:error] = exception.to_s
       end
+
+      if @response_vars[:error]
+        @success = false
+      end
+
+
     end
 
     def miss?
-      @response_vars && @response_vars[:status] == "miss"
+      @response_vars[:status] == "miss"
     end
 
     def prize
-      @response_vars && @response_vars[:prize]
+      @response_vars[:prize]
     end
 
     def success?
@@ -48,7 +55,7 @@ module Platform45
     end
     
     def status
-      @response_vars && @response_vars[:status]
+      @response_vars[:status]
     end
 
     def sunk?
@@ -56,11 +63,11 @@ module Platform45
     end
 
     def sunk
-      @response_vars && @response_vars[:sunk]
+      @response_vars[:sunk]
     end
 
     def won?
-      @response_vars && @response_vars[:game_status] == "lost" 
+      @response_vars[:game_status] == "lost" 
     end
 
   end
