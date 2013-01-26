@@ -9,6 +9,18 @@ describe FireSalvoService do
     Platform45Game.stub(:find).and_return(platform45_game)
   end
 
+  describe ".increase_hit_count(game)" do
+    it "increases the game's open_hit_count by 1" do
+      platform45_game.should_receive(:open_hit_counter=).with(21) 
+      service.increase_hit_count platform45_game
+    end
+
+    it "saves the game" do
+      platform45_game.should_receive :save
+      service.increase_hit_count platform45_game
+    end
+  end
+
   describe ".prepare_board(game)" do
     it "returns a instance of Board" do
       service.prepare_board(platform45_game).should be_instance_of(Board)
@@ -144,12 +156,12 @@ describe FireSalvoService do
 
       it "increments the game's open_hit_counter if a ship is hit" do
         normal_response.stub(:sunk?).and_return(false)
-        platform45_game.should_receive(:open_hit_counter=).with(21)
+        service.should_receive(:increase_hit_count).with(platform45_game) 
         service.process(12)
       end
 
-      it "reduces the game's open_hit_counter if a ship is sunk" do
-        platform45_game.should_receive(:open_hit_counter=).with(18)  # open hits (20) - (Destroyer length (3) - 1)
+      it "processes a sunk ship" do
+        service.should_receive(:sunk_a_ship).with(platform45_game, normal_response)
         service.process(12)
       end
 
@@ -157,14 +169,48 @@ describe FireSalvoService do
         Platform45Salvo.should_receive(:create).with({x: 3, y: 8, owner: "me", platform45_game_id: 12, state: "miss"})
         service.process(12)
       end
+    end
+  end
 
+  describe ".sunk_a_ship(platform45_game, api_response)" do
+    let(:game) { stub "Game", open_hit_counter: 7}
+    let(:api_response) { stub "APIResponse", sunk: "Destroyer" }
+    let(:ship) { Platform45Ship.new({name: "Destroyer"}) }
 
+    before :each do
+      game.stub(:open_hit_counter=)
+      game.stub(:save)
+      game.stub_chain(:ships, :theirs, :active, :where, :first).and_return(ship)
+      ship.stub(:save)
+    end
 
-      it "marks the ship as sunk, if API returns sunk" do
-        active_ship.should_receive(:state=).with("sunk")
-        active_ship.should_receive(:save)
-        service.process(12)
-      end 
+    it "marks the ship as sunk, if API returns sunk" do
+      ship.should_receive(:state=).with("sunk")
+      ship.should_receive(:save)
+      service.sunk_a_ship game, api_response
+    end 
+
+    it "descreases the open_hit_counter by 1 less than the ship's size" do
+      game.should_receive(:open_hit_counter=).with(5)
+      service.sunk_a_ship game, api_response
+    end
+  end
+
+  describe ".unsunk_ships(platform45_game)" do
+    let(:game) { Platform45Game.new }
+    let(:ships) {[stub("Ship",sunk?:true), stub("Ship",sunk?:false), stub("Ship",sunk?:false)]}
+
+    before :each do
+      game.stub_chain(:ships, :theirs).and_return(ships)
+      ships.each { |s| s.stub(:to_internal_ship).and_return({}) }
+    end
+
+    it "filters out ships that are sunk" do
+      service.unsunk_ships(game).length.should == 2
+    end
+
+    it "returns an internal ship representation for calculations" do
+      service.unsunk_ships(game).each { |ship| ship.should be_instance_of(Hash) }
     end
   end
 end
