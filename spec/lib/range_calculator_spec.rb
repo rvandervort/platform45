@@ -3,7 +3,7 @@ require 'spec_helper.rb'
 describe RangeCalculator do
   let(:calculator) { RangeCalculator.new }
 
-  describe ".horizontal" do
+  describe ".horizontal(start_x, start_y, ship_size)" do
     it "returns the correct range" do
       x, y = calculator.horizontal(1,2,3)
 
@@ -12,7 +12,7 @@ describe RangeCalculator do
     end
   end
 
-  describe ".vertical" do
+  describe ".vertical(start_x, start_y, ship_size)" do
     it "returns the correct range" do
       x, y = calculator.vertical(1,2,3)
 
@@ -20,5 +20,4 @@ describe RangeCalculator do
       y.should == (2..4)    
     end
   end
-
 end

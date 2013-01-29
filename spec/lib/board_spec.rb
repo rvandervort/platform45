@@ -35,39 +35,39 @@ describe Board do
     end
 
     it "returns correct spaces for the upper-right corner" do
-      spaces = board.adjacent_spaces(5,1)
+      spaces = board.adjacent_spaces(4, 0)
       spaces.count.should == 2
 
       spaces.select { |s| s.x == 4 and s.y == 1}.count.should == 1
-      spaces.select { |s| s.x == 5 and s.y == 2}.count.should == 1
-      spaces.select { |s| s.x == 4 and s.y == 2}.should eq([])
+      spaces.select { |s| s.x == 3 and s.y == 0}.count.should == 1
+      spaces.select { |s| s.x == 3 and s.y == 1}.should eq([])
     end
 
     it "returns correct spaces for the upper-left corner" do
-      spaces = board.adjacent_spaces(1,1)
+      spaces = board.adjacent_spaces(0, 0)
       spaces.count.should == 2
 
-      spaces.select { |s| s.x == 1 and s.y == 2}.count.should == 1
-      spaces.select { |s| s.x == 2 and s.y == 1}.count.should == 1
-      spaces.select { |s| s.x == 2 and s.y == 2}.should eq([])
+      spaces.select { |s| s.x == 0 and s.y == 1}.count.should == 1
+      spaces.select { |s| s.x == 1 and s.y == 0}.count.should == 1
+      spaces.select { |s| s.x == 1 and s.y == 1}.should eq([])
     end
 
     it "returns correct spaces for the lower-left corner" do
-      spaces = board.adjacent_spaces(1,5)
+      spaces = board.adjacent_spaces(0, 4)
       spaces.count.should == 2
 
+      spaces.select { |s| s.x == 0 and s.y == 3}.count.should == 1
       spaces.select { |s| s.x == 1 and s.y == 4}.count.should == 1
-      spaces.select { |s| s.x == 2 and s.y == 5}.count.should == 1
-      spaces.select { |s| s.x == 2 and s.y == 4}.should eq([])      
+      spaces.select { |s| s.x == 1 and s.y == 3}.should eq([])      
     end
 
     it "returns correct spaces for the lower-right corner" do
-      spaces = board.adjacent_spaces(5,5)
+      spaces = board.adjacent_spaces(4, 4)
       spaces.count.should == 2
 
-      spaces.select { |s| s.x == 4 and s.y == 5}.count.should == 1
-      spaces.select { |s| s.x == 5 and s.y == 4}.count.should == 1
-      spaces.select { |s| s.x == 4 and s.y == 4}.should eq([])            
+      spaces.select { |s| s.x == 3 and s.y == 4}.count.should == 1
+      spaces.select { |s| s.x == 4 and s.y == 3}.count.should == 1
+      spaces.select { |s| s.x == 3 and s.y == 3}.should eq([])            
     end    
   end
 
@@ -94,7 +94,7 @@ describe Board do
 
   describe ".get_range" do
     it "returns an array with length equal to the board's size for nil" do
-      board.get_range(nil).should == (1..board.size)
+      board.get_range(nil).should == (0..(board.size - 1))
     end
     it "returns an array for simple integers" do
       board.get_range(2).should == [2]

@@ -8,25 +8,25 @@ describe "ProbabilityCalculator" do
   describe ".calculate_single_ship(board, ship)" do
     let(:result) do
       h = Hash.new
-      h[[1,1]] = 2
-      h[[1,2]] = 3
+      h[[0,0]] = 2
+      h[[0,1]] = 3
+      h[[0,2]] = 3
+      h[[0,3]] = 2
+
+      h[[1,0]] = 3
+      h[[1,1]] = 4
+      h[[1,2]] = 4
       h[[1,3]] = 3
-      h[[1,4]] = 2
 
-      h[[2,1]] = 3
+      h[[2,0]] = 3
+      h[[2,1]] = 4
       h[[2,2]] = 4
-      h[[2,3]] = 4
-      h[[2,4]] = 3
+      h[[2,3]] = 3
 
+      h[[3,0]] = 2
       h[[3,1]] = 3
-      h[[3,2]] = 4
-      h[[3,3]] = 4
-      h[[3,4]] = 3
-
-      h[[4,1]] = 2
-      h[[4,2]] = 3
-      h[[4,3]] = 3
-      h[[4,4]] = 2
+      h[[3,2]] = 3
+      h[[3,3]] = 2
 
       h
     end
@@ -38,8 +38,8 @@ describe "ProbabilityCalculator" do
     it "returns the correct calculation, when no spaces are blocked" do
       result_matrix = subject.calculate_single_ship(board, ship)
 
-      (1..4).each do |x|
-        (1..4).each do |y|
+      (0..3).each do |x|
+        (0..3).each do |y|
           result_matrix[[x,y]].should == result[[x,y]]
         end
       end
@@ -53,10 +53,10 @@ describe "ProbabilityCalculator" do
     ]}
     let(:single_result) do
       h = Hash.new
-      h[[1,1]] = 3
-      h[[1,2]] = 7
-      h[[2,1]] = 3
-      h[[2,2]] = 7
+      h[[0,0]] = 3
+      h[[0,1]] = 7
+      h[[1,0]] = 3
+      h[[1,1]] = 7
       h
     end
 
@@ -77,8 +77,8 @@ describe "ProbabilityCalculator" do
     it "sums up the individual probabilities" do
       result = subject.calculate_all_ships(board, ships)
 
-      result[[1,1]].should == 6
-      result[[1,2]].should == 14
+      result[[0,0]].should == 6
+      result[[0,1]].should == 14
     end
   end
 
@@ -90,7 +90,6 @@ describe "ProbabilityCalculator" do
   describe ".new_probability(board, matrix_cell, space)" do
     let(:space) { Space.new(1,1) }
 
-    
     context "in hunt mode" do
       before :each do
         board.stub(:unsunk_ships?).and_return(false)
@@ -126,10 +125,10 @@ describe "ProbabilityCalculator" do
     describe ".next_guess(board, ships)" do
       let(:probabilities) do
         h = Hash.new
-        h[[1,1]] = 12
-        h[[1,2]] = 3
-        h[[2,1]] = 50
-        h[[2,2]] = 7
+        h[[0,0]] = 12
+        h[[0,1]] = 3
+        h[[1,0]] = 50
+        h[[1,1]] = 7
         h
       end
       let(:ships) { [ship] }
@@ -144,7 +143,7 @@ describe "ProbabilityCalculator" do
       end
 
       it "returns the max of the calculated probabilities" do
-        subject.next_guess(board, ships).should == [2, 1]
+        subject.next_guess(board, ships).should == [1, 0]
       end
     end
     

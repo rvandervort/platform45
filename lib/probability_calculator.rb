@@ -5,8 +5,8 @@ class ProbabilityCalculator
 
     result_matrix = Hash.new
 
-    (1..board.size).each do |x|
-      (1..board.size).each do |y|
+    (0..(board.size - 1)).each do |x|
+      (0..(board.size - 1)).each do |y|
         result_matrix[[x,y]] = probabilities.inject(0) { |v,m| v = v + m[[x,y]]  }
       end
     end
@@ -20,8 +20,8 @@ class ProbabilityCalculator
     probability = Proc.new { |x,y,space|  matrix[[x,y]] = new_probability(board, matrix[[x,y]], space) }
 
     # Horizontal
-    (1..board.size).each do |start_y|
-      (1..(board.size - ship.size + 1)).each do |start_x|
+    (0..(board.size - 1)).each do |start_y|
+      (0..(board.size - ship.size)).each do |start_x|
         if board.will_fit?(ship, start_x, start_y, :horizontal)
           board.each_space (start_x..(start_x + ship.size - 1)), start_y, &probability
         end
@@ -29,8 +29,8 @@ class ProbabilityCalculator
     end
 
     # Vertical
-    (1..board.size).each do |start_x|
-      (1..(board.size - ship.size + 1)).each do |start_y|
+    (0..(board.size - 1)).each do |start_x|
+      (0..(board.size - ship.size)).each do |start_y|
         if board.will_fit?(ship, start_x, start_y, :vertical)
           board.each_space start_x, (start_y..(start_y + ship.size - 1)), &probability
         end
@@ -43,8 +43,8 @@ class ProbabilityCalculator
   def initial_matrix(board)
     matrix = Hash.new
 
-    (1..board.size).each do |x|
-      (1..board.size).each do |y|
+    (0..(board.size - 1)).each do |x|
+      (0..(board.size - 1)).each do |y|
         matrix[[x, y]] = 0 
       end
     end

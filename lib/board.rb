@@ -27,8 +27,8 @@ class Board
     @board = Hash.new
     @hits = 0
 
-    (1..@size).each do |x|
-      (1..@size).each { |y| @board[[x,y]] = Space.new(x,y) }
+    (0..(@size - 1)).each do |x|
+      (0..(@size - 1)).each { |y| @board[[x,y]] = Space.new(x,y) }
     end
   end
 
@@ -48,7 +48,7 @@ class Board
 
   def get_range(dimension) 
     if dimension.nil?
-      (1..size)
+      (0..(size - 1))
     else
       if dimension.respond_to?(:count)
         dimension
