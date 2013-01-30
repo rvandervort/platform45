@@ -11,7 +11,7 @@ describe DefaultPlacementStrategy do
     end
     it "places every ship in the first column" do
       response.each do |placement|
-        placement[:x].should == 1
+        placement[:x].should == 0
       end
     end
     it "places every ship in horizontal orientation" do
