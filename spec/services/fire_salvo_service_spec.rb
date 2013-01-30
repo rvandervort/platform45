@@ -88,7 +88,7 @@ describe FireSalvoService do
 
       it "returns a hash with game_state = iwon" do
         response = service.process(12)
-        response[:game_state].should == :iwon
+        response[:game_status].should == :iwon
       end
 
       it "returns a hash with the prize" do

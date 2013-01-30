@@ -25,8 +25,7 @@ class FireSalvoService
 
     if api_response.success?
       if api_response.won?
-        puts api_response.prize        
-        {status: :ok, game_state: :iwon, msg: "I've won!", prize: api_response.prize }
+        {status: :ok, game_status: :iwon, msg: "I've won!", prize: api_response.prize }
       else
         normal_response(platform45_game, api_response, [x,y])
       end
